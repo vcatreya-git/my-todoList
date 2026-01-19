@@ -1,9 +1,14 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Palette, ChevronDown, Check } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 
-export default function ThemeSwitcher() {
+interface ThemeSwitcherProps {
+  isCompact?: boolean;
+}
+
+export default function ThemeSwitcher({ isCompact = false }: ThemeSwitcherProps) {
   const { theme, setTheme, themes } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -22,36 +27,30 @@ export default function ThemeSwitcher() {
     <div ref={menuRef} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-lg hover:bg-[var(--card-hover)] transition-colors flex items-center gap-2"
+        className={`flex items-center gap-2 rounded-xl hover:bg-white/5 transition-colors ${
+          isCompact ? 'p-2 justify-center w-full' : 'px-3 py-2'
+        }`}
         title="Change theme"
       >
-        <svg
-          className="w-5 h-5 text-[var(--muted)]"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
-          />
-        </svg>
-        <span className="text-sm text-[var(--foreground)] hidden sm:inline">{theme.name}</span>
-        <svg
-          className={`w-4 h-4 text-[var(--muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        <Palette className="w-4 h-4 text-[var(--muted)]" />
+        {!isCompact && (
+          <>
+            <span className="text-sm text-[var(--foreground)] flex-1">{theme.name}</span>
+            <ChevronDown
+              className={`w-3.5 h-3.5 text-[var(--muted)] transition-transform duration-200 ${
+                isOpen ? 'rotate-180' : ''
+              }`}
+            />
+          </>
+        )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-48 bg-[var(--card-bg)] border border-[var(--border)] rounded-lg shadow-lg z-50 overflow-hidden">
-          <div className="py-1">
+        <div className={`absolute ${isCompact ? 'left-full ml-2 bottom-0' : 'left-0 bottom-full mb-2'} w-52 bg-[var(--card-solid)] border border-[var(--border)] rounded-xl shadow-xl z-50 overflow-hidden`}>
+          <div className="p-2">
+            <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
+              Select Theme
+            </p>
             {themes.map((t) => (
               <button
                 key={t.id}
@@ -59,31 +58,29 @@ export default function ThemeSwitcher() {
                   setTheme(t.id);
                   setIsOpen(false);
                 }}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all ${
                   theme.id === t.id
-                    ? 'bg-[var(--accent)] text-white'
-                    : 'hover:bg-[var(--card-hover)] text-[var(--foreground)]'
+                    ? 'bg-[var(--accent)]/10 text-[var(--accent)]'
+                    : 'hover:bg-white/5 text-[var(--foreground)]'
                 }`}
               >
-                <div className="flex gap-1">
+                <div className="flex gap-0.5">
                   <div
-                    className="w-3 h-3 rounded-full"
+                    className="w-3 h-3 rounded-full ring-1 ring-white/10"
                     style={{ backgroundColor: t.colors.background }}
                   />
                   <div
-                    className="w-3 h-3 rounded-full"
+                    className="w-3 h-3 rounded-full ring-1 ring-white/10 -ml-1"
                     style={{ backgroundColor: t.colors.accent }}
                   />
                   <div
-                    className="w-3 h-3 rounded-full"
+                    className="w-3 h-3 rounded-full ring-1 ring-white/10 -ml-1"
                     style={{ backgroundColor: t.colors.cardBg }}
                   />
                 </div>
-                <span className="text-sm font-medium">{t.name}</span>
+                <span className="flex-1 text-sm font-medium">{t.name}</span>
                 {theme.id === t.id && (
-                  <svg className="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <Check className="w-4 h-4 text-[var(--accent)]" />
                 )}
               </button>
             ))}

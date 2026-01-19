@@ -17,6 +17,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { GripVertical, ChevronRight, MoreVertical, Plus, Pencil, Trash2, Calendar, X } from 'lucide-react';
 import { Checklist } from '@/types';
 import { useTodo } from '@/context/TodoContext';
 import TaskItem from './TaskItem';
@@ -38,6 +39,7 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const addTaskRef = useRef<HTMLDivElement>(null);
 
   const {
     attributes,
@@ -88,6 +90,11 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowMenu(false);
+      }
+      if (addTaskRef.current && !addTaskRef.current.contains(event.target as Node)) {
+        setIsAddingTask(false);
+        setNewTaskTitle('');
+        setNewTaskDueDate('');
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -147,96 +154,99 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
     <div
       ref={setNodeRef}
       style={style}
-      className={`rounded-lg border transition-colors ${
-        isSelected ? 'border-[var(--accent)] bg-[var(--card-bg)]' : 'border-[var(--border)] bg-[var(--card-bg)] hover:border-[var(--card-hover)]'
-      } ${isDragging ? 'z-50 shadow-lg' : ''}`}
+      className={`rounded-xl border transition-all duration-200 hover-lift ${
+        isSelected
+          ? 'border-[var(--accent)]/30 bg-[var(--card-solid)] shadow-lg shadow-[var(--accent)]/5'
+          : 'border-[var(--border)] bg-[var(--card-solid)] hover:border-white/10'
+      } ${isDragging ? 'z-50 shadow-2xl' : ''}`}
     >
+      {/* Header */}
       <div
-        className="p-3 cursor-pointer"
+        className="px-5 py-3.5 cursor-pointer"
         onClick={handleClick}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
+          {/* Drag handle */}
           <div
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 -ml-1 rounded hover:bg-[var(--card-hover)]"
+            className="cursor-grab active:cursor-grabbing p-1 -ml-2 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-white/5 transition-all"
             onClick={(e) => e.stopPropagation()}
           >
-            <svg className="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
-            </svg>
+            <GripVertical className="w-4 h-4 text-[var(--muted)]" />
           </div>
 
+          {/* Expand arrow */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(!isExpanded);
             }}
-            className="p-1 rounded hover:bg-[var(--card-hover)]"
+            className="p-1 -ml-2 rounded-lg hover:bg-white/5 transition-colors"
           >
-            <svg
-              className={`w-4 h-4 text-[var(--muted)] transition-transform ${isExpanded ? 'rotate-90' : ''}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            <ChevronRight
+              className={`w-4 h-4 text-[var(--muted)] transition-transform duration-200 ${
+                isExpanded ? 'rotate-90' : ''
+              }`}
+            />
           </button>
 
-          {isEditing ? (
-            <input
-              ref={inputRef}
-              type="text"
-              value={editName}
-              onChange={(e) => setEditName(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onBlur={handleRename}
-              className="flex-1 px-2 py-1 bg-[var(--background)] border border-[var(--accent)] rounded text-[var(--foreground)] text-sm focus:outline-none"
-              onClick={(e) => e.stopPropagation()}
-            />
-          ) : (
-            <span className="flex-1 text-[var(--foreground)] font-medium">{checklist.name}</span>
-          )}
+          {/* Checklist name */}
+          <div className="flex-1 min-w-0">
+            {isEditing ? (
+              <input
+                ref={inputRef}
+                type="text"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onBlur={handleRename}
+                className="w-full px-3 py-1 bg-[var(--background)] border border-[var(--accent)] rounded-lg text-[var(--foreground)] text-sm focus:outline-none"
+                onClick={(e) => e.stopPropagation()}
+              />
+            ) : (
+              <span className="text-[var(--foreground)] font-medium block truncate">
+                {checklist.name}
+              </span>
+            )}
+          </div>
 
+          {/* Task count badge */}
           <div className="flex items-center gap-3">
-            <span className="text-xs text-[var(--muted)]">
+            <span className="text-xs font-medium text-[var(--muted)] bg-white/5 px-2 py-1 rounded-md">
               {completedCount}/{totalCount}
             </span>
+
+            {/* Menu */}
             <div className="relative" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="p-1 rounded hover:bg-[var(--card-hover)]"
+                className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
               >
-                <svg className="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                </svg>
+                <MoreVertical className="w-4 h-4 text-[var(--muted)]" />
               </button>
 
               {showMenu && (
                 <div
                   ref={menuRef}
-                  className="absolute right-0 top-full mt-1 w-36 bg-[var(--card-hover)] border border-[var(--border)] rounded-lg shadow-lg z-10"
+                  className="absolute right-0 top-full mt-1 w-40 bg-[var(--card-solid)] border border-[var(--border)] rounded-xl shadow-xl z-10 overflow-hidden"
                 >
                   <button
                     onClick={() => {
                       setIsEditing(true);
                       setShowMenu(false);
                     }}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--border)] rounded-t-lg"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground)] hover:bg-white/5 transition-colors"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
+                    <Pencil className="w-4 h-4 text-[var(--muted)]" />
                     Rename
                   </button>
+                  <div className="h-px bg-[var(--border)]" />
                   <button
                     onClick={handleDelete}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--danger)] hover:bg-[var(--border)] rounded-b-lg"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--danger)] hover:bg-[var(--danger-muted)] transition-colors"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
+                    <Trash2 className="w-4 h-4" />
                     Delete
                   </button>
                 </div>
@@ -245,77 +255,87 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
           </div>
         </div>
 
-        {totalCount > 0 && (
-          <div className="mt-2 ml-14">
-            <div className="h-1.5 bg-[var(--border)] rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-300"
-                style={{ width: `${progress}%`, backgroundColor: folderColor }}
-              />
-            </div>
+        {/* Progress bar - always show track, folder color fill */}
+        <div className="mt-3 ml-8">
+          <div className="h-1.5 rounded-full overflow-hidden progress-track">
+            <div
+              className="h-full rounded-full transition-all duration-500 ease-out"
+              style={{
+                width: `${progress}%`,
+                backgroundColor: progress > 0 ? folderColor : 'transparent'
+              }}
+            />
           </div>
-        )}
+        </div>
       </div>
 
+      {/* Expanded tasks section */}
       {isExpanded && (
-        <div className="px-3 pb-3 border-t border-[var(--border)]">
-          <div className="pt-3 space-y-2">
-            {/* Add task button/input at the top */}
+        <div className="px-5 pb-4 border-t border-[var(--border)]">
+          <div className="pt-4 space-y-1">
+            {/* Add task button/form */}
             {isAddingTask ? (
-              <div className="space-y-2 mb-2 p-3 bg-[var(--card-hover)] rounded-lg">
+              <div ref={addTaskRef} className="mb-3 p-4 bg-[var(--background)] rounded-xl border border-[var(--border)]">
                 <input
                   type="text"
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
                   onKeyDown={handleTaskKeyDown}
-                  placeholder="Task title"
-                  className="w-full px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]"
+                  placeholder="What needs to be done?"
+                  className="w-full px-0 py-1 bg-transparent text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none"
                   autoFocus
                 />
-                <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--border)]">
+                  <button
+                    onClick={() => {
+                      const input = document.getElementById('task-date-input') as HTMLInputElement;
+                      input?.showPicker?.();
+                    }}
+                    className="flex items-center gap-2 px-3 py-1.5 text-xs text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-white/5 rounded-lg transition-colors"
+                  >
+                    <Calendar className="w-3.5 h-3.5" />
+                    {newTaskDueDate || 'Add date'}
+                  </button>
                   <input
+                    id="task-date-input"
                     type="date"
                     value={newTaskDueDate}
                     onChange={(e) => setNewTaskDueDate(e.target.value)}
-                    className="flex-1 px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] text-sm focus:outline-none focus:border-[var(--accent)]"
+                    className="sr-only"
                   />
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleAddTask}
-                    className="flex-1 px-3 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-sm rounded-lg transition-colors"
-                  >
-                    Add
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsAddingTask(false);
-                      setNewTaskTitle('');
-                      setNewTaskDueDate('');
-                    }}
-                    className="flex-1 px-3 py-2 bg-[var(--border)] hover:bg-[var(--card-hover)] text-[var(--foreground)] text-sm rounded-lg transition-colors"
-                  >
-                    Cancel
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        setIsAddingTask(false);
+                        setNewTaskTitle('');
+                        setNewTaskDueDate('');
+                      }}
+                      className="px-3 py-1.5 text-xs text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleAddTask}
+                      disabled={!newTaskTitle.trim()}
+                      className="px-4 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] rounded-lg hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    >
+                      Add Task
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
               <button
                 onClick={() => setIsAddingTask(true)}
-                className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card-hover)] rounded-lg transition-colors mb-2"
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-white/5 rounded-xl transition-all mb-2"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
+                <Plus className="w-4 h-4" />
                 Add task
               </button>
             )}
 
-            {/* Tasks: unfinished first, then completed at bottom */}
-            {checklist.tasks.length > 0 ? (
+            {/* Tasks list */}
+            {checklist.tasks.length > 0 && (
               <DndContext
                 sensors={taskSensors}
                 collisionDetection={closestCenter}
@@ -328,7 +348,7 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
                   ]}
                   strategy={verticalListSortingStrategy}
                 >
-                  {/* Unfinished tasks first */}
+                  {/* Active tasks */}
                   {checklist.tasks
                     .filter((task) => !task.completed)
                     .map((task) => (
@@ -340,21 +360,29 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
                         folderColor={folderColor}
                       />
                     ))}
-                  {/* Completed tasks at the bottom */}
-                  {checklist.tasks
-                    .filter((task) => task.completed)
-                    .map((task) => (
-                      <TaskItem
-                        key={task.id}
-                        task={task}
-                        folderId={folderId}
-                        checklistId={checklist.id}
-                        folderColor={folderColor}
-                      />
-                    ))}
+
+                  {/* Completed tasks */}
+                  {checklist.tasks.filter((t) => t.completed).length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-[var(--border)]">
+                      <p className="text-xs font-medium text-[var(--muted)] uppercase tracking-wider mb-2 px-4">
+                        Completed
+                      </p>
+                      {checklist.tasks
+                        .filter((task) => task.completed)
+                        .map((task) => (
+                          <TaskItem
+                            key={task.id}
+                            task={task}
+                            folderId={folderId}
+                            checklistId={checklist.id}
+                            folderColor={folderColor}
+                          />
+                        ))}
+                    </div>
+                  )}
                 </SortableContext>
               </DndContext>
-            ) : null}
+            )}
           </div>
         </div>
       )}

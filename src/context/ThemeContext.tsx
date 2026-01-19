@@ -16,6 +16,8 @@ const THEME_STORAGE_KEY = 'todolist-theme';
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
+  const isDark = theme.id === 'dark';
+
   root.style.setProperty('--background', theme.colors.background);
   root.style.setProperty('--foreground', theme.colors.foreground);
   root.style.setProperty('--card-bg', theme.colors.cardBg);
@@ -26,6 +28,28 @@ function applyTheme(theme: Theme) {
   root.style.setProperty('--danger', theme.colors.danger);
   root.style.setProperty('--success', theme.colors.success);
   root.style.setProperty('--muted', theme.colors.muted);
+
+  // Set card-solid and glass colors based on theme
+  root.style.setProperty('--card-solid', theme.colors.cardBg);
+  root.style.setProperty('--gradient-start', theme.colors.accent);
+  root.style.setProperty('--gradient-end', theme.colors.accent);
+
+  // Set glassmorphism and track colors
+  if (isDark) {
+    root.style.setProperty('--glass-bg', 'rgba(28, 28, 36, 0.9)');
+    root.style.setProperty('--glass-border', 'rgba(255, 255, 255, 0.05)');
+    root.style.setProperty('--glass-shadow', 'rgba(0, 0, 0, 0.3)');
+    root.style.setProperty('--track-empty', 'rgba(45, 45, 56, 0.6)');
+    root.style.setProperty('--danger-muted', 'rgba(252, 165, 165, 0.15)');
+    root.style.setProperty('--success-muted', 'rgba(110, 231, 183, 0.15)');
+  } else {
+    root.style.setProperty('--glass-bg', 'rgba(255, 255, 255, 0.9)');
+    root.style.setProperty('--glass-border', 'rgba(0, 0, 0, 0.05)');
+    root.style.setProperty('--glass-shadow', 'rgba(0, 0, 0, 0.08)');
+    root.style.setProperty('--track-empty', 'rgba(228, 228, 231, 0.8)');
+    root.style.setProperty('--danger-muted', 'rgba(220, 38, 38, 0.1)');
+    root.style.setProperty('--success-muted', 'rgba(22, 163, 74, 0.1)');
+  }
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
+import { Search, X, Folder, ClipboardList, CheckCircle2 } from 'lucide-react';
 import { useTodo } from '@/context/TodoContext';
 
 export default function SearchBar() {
@@ -35,23 +36,11 @@ export default function SearchBar() {
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'folder':
-        return (
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-          </svg>
-        );
+        return <Folder className="w-4 h-4" />;
       case 'checklist':
-        return (
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
-        );
+        return <ClipboardList className="w-4 h-4" />;
       case 'task':
-        return (
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        );
+        return <CheckCircle2 className="w-4 h-4" />;
       default:
         return null;
     }
@@ -73,40 +62,32 @@ export default function SearchBar() {
   return (
     <div ref={containerRef} className="relative">
       <div className="relative">
-        <svg
-          className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[var(--muted)]"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
-          placeholder="Search folders, checklists, tasks..."
-          className="w-full pl-10 pr-4 py-2.5 bg-[var(--card-bg)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)] transition-colors"
+          placeholder="Search..."
+          className="w-full pl-11 pr-10 py-2 bg-white/5 border border-transparent rounded-xl text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]/30 focus:bg-white/[0.07] transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded hover:bg-[var(--border)]"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-lg hover:bg-white/10 transition-colors"
           >
-            <svg className="w-4 h-4 text-[var(--muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <X className="w-3.5 h-3.5 text-[var(--muted)]" />
           </button>
         )}
       </div>
 
       {isFocused && searchQuery && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--card-bg)] border border-[var(--border)] rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-[var(--card-solid)] border border-[var(--border)] rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto">
           {searchResults.length === 0 ? (
-            <div className="p-4 text-center text-[var(--muted)]">
-              <p>No results found</p>
-              <p className="text-sm mt-1">Try a different search term</p>
+            <div className="p-6 text-center">
+              <Search className="w-8 h-8 text-[var(--muted)] mx-auto mb-2 opacity-50" />
+              <p className="text-[var(--foreground)] font-medium">No results found</p>
+              <p className="text-sm text-[var(--muted)] mt-1">Try a different search term</p>
             </div>
           ) : (
             <div className="py-2">
@@ -114,15 +95,15 @@ export default function SearchBar() {
                 <button
                   key={`${result.type}-${result.id}`}
                   onClick={() => handleResultClick(result)}
-                  className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-[var(--card-hover)] transition-colors text-left"
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/5 transition-colors text-left"
                 >
                   <div
-                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    className="w-2 h-2 rounded-full flex-shrink-0 ring-2 ring-white/10"
                     style={{ backgroundColor: result.color }}
                   />
                   <span className="text-[var(--muted)]">{getTypeIcon(result.type)}</span>
-                  <span className="flex-1 text-[var(--foreground)] truncate">{result.name}</span>
-                  <span className="text-xs text-[var(--muted)] bg-[var(--border)] px-2 py-0.5 rounded">
+                  <span className="flex-1 text-[var(--foreground)] text-sm truncate">{result.name}</span>
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-[var(--muted)] bg-white/5 px-2 py-1 rounded-md">
                     {getTypeLabel(result.type)}
                   </span>
                 </button>

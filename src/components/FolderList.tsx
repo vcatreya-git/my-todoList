@@ -15,16 +15,27 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { Plus, Folder, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTodo } from '@/context/TodoContext';
 import FolderItem from './FolderItem';
 import ColorPicker from './ColorPicker';
+import ThemeSwitcher from './ThemeSwitcher';
 import { FOLDER_COLORS } from '@/types';
 
-export default function FolderList() {
+interface FolderListProps {
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
+}
+
+export default function FolderList({ isCollapsed, onToggleCollapse }: FolderListProps) {
   const { folders, addFolder, reorderFolders } = useTodo();
   const [isAdding, setIsAdding] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [selectedColor, setSelectedColor] = useState(FOLDER_COLORS[8]);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Sidebar is expanded if not collapsed OR if hovered while collapsed
+  const isExpanded = !isCollapsed || isHovered;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -62,68 +73,109 @@ export default function FolderList() {
     }
   };
 
+  // Determine actual width based on collapsed and hovered state
+  const sidebarWidth = isCollapsed && !isHovered ? 'w-16' : 'w-72';
+  const isOverlay = isCollapsed && isHovered;
+
   return (
-    <div className="h-full flex flex-col">
-      <div className="p-4 border-b border-[var(--border)]">
-        <div className="flex items-center justify-between mb-2">
-          <h2 className="text-lg font-semibold text-[var(--foreground)]">Folders</h2>
-          <button
-            onClick={() => setIsAdding(true)}
-            className="p-2 rounded-lg bg-[var(--card-bg)] hover:bg-[var(--card-hover)] transition-colors"
-            title="Add new folder"
-          >
-            <svg className="w-5 h-5 text-[var(--accent)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
+    <div
+      className={`h-full flex flex-col relative transition-all duration-300 ease-in-out ${sidebarWidth} ${
+        isOverlay
+          ? 'absolute left-0 top-0 z-50 shadow-2xl bg-[var(--background)] border-r border-[var(--border)]'
+          : 'glass'
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Header */}
+      <div className={`px-3 py-4 border-b border-white/5 transition-all duration-300`}>
+        <div className="flex items-center justify-between">
+          {isExpanded ? (
+            <>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
+                  Folders
+                </span>
+                <span className="px-1.5 py-0.5 text-xs font-medium text-[var(--muted)] bg-white/5 rounded">
+                  {folders.length}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setIsAdding(true)}
+                  className="p-1.5 rounded-lg hover:bg-white/5 transition-colors group"
+                  title="Add new folder"
+                >
+                  <Plus className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors" />
+                </button>
+              </div>
+            </>
+          ) : (
+            <div className="w-full flex justify-center">
+              <Folder className="w-5 h-5 text-[var(--muted)]" />
+            </div>
+          )}
         </div>
 
-        {isAdding && (
-          <div className="mt-3 p-3 bg-[var(--card-bg)] rounded-lg border border-[var(--border)]">
-            <input
-              type="text"
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Folder name"
-              className="w-full px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]"
-              autoFocus
-            />
-            <div className="mt-3">
-              <ColorPicker
-                selectedColor={selectedColor}
-                onColorSelect={setSelectedColor}
+        {/* Add folder form */}
+        {isAdding && isExpanded && (
+          <div className="mt-4 p-3 bg-white/5 rounded-xl border border-white/10">
+            <div className="flex items-center gap-2 mb-3">
+              <input
+                type="text"
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Folder name"
+                className="flex-1 px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/20 transition-all"
+                autoFocus
               />
-            </div>
-            <div className="mt-3 flex gap-2">
-              <button
-                onClick={handleAddFolder}
-                className="flex-1 px-3 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white rounded-lg transition-colors"
-              >
-                Add
-              </button>
               <button
                 onClick={() => {
                   setIsAdding(false);
                   setNewFolderName('');
                 }}
-                className="flex-1 px-3 py-2 bg-[var(--border)] hover:bg-[var(--card-hover)] text-[var(--foreground)] rounded-lg transition-colors"
+                className="p-2 rounded-lg hover:bg-white/5 transition-colors"
               >
-                Cancel
+                <X className="w-4 h-4 text-[var(--muted)]" />
               </button>
             </div>
+            <div className="mb-3">
+              <ColorPicker
+                selectedColor={selectedColor}
+                onColorSelect={setSelectedColor}
+              />
+            </div>
+            <button
+              onClick={handleAddFolder}
+              disabled={!newFolderName.trim()}
+              className="w-full px-4 py-2 bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white text-sm font-medium rounded-lg hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            >
+              Create Folder
+            </button>
           </div>
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2">
+      {/* Folder list */}
+      <div className="flex-1 overflow-y-auto px-2 py-2">
         {folders.length === 0 ? (
-          <div className="text-center py-8 text-[var(--muted)]">
-            <svg className="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-            </svg>
-            <p>No folders yet</p>
-            <p className="text-sm mt-1">Click + to create one</p>
+          <div className={`text-center py-12 ${isExpanded ? 'px-4' : 'px-1'}`}>
+            {isExpanded ? (
+              <>
+                <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-white/5 flex items-center justify-center">
+                  <Folder className="w-6 h-6 text-[var(--muted)]" />
+                </div>
+                <p className="text-[var(--foreground)] font-medium mb-1 text-sm">No folders yet</p>
+                <p className="text-xs text-[var(--muted)]">
+                  Create your first folder to get started
+                </p>
+              </>
+            ) : (
+              <div className="w-8 h-8 mx-auto rounded-lg bg-white/5 flex items-center justify-center">
+                <Plus className="w-4 h-4 text-[var(--muted)]" />
+              </div>
+            )}
           </div>
         ) : (
           <DndContext
@@ -137,12 +189,42 @@ export default function FolderList() {
             >
               <div className="space-y-1">
                 {folders.map((folder) => (
-                  <FolderItem key={folder.id} folder={folder} />
+                  <FolderItem
+                    key={folder.id}
+                    folder={folder}
+                    isCollapsed={!isExpanded}
+                  />
                 ))}
               </div>
             </SortableContext>
           </DndContext>
         )}
+      </div>
+
+      {/* Footer with Theme Switcher and Collapse Toggle */}
+      <div className="px-2 py-3 border-t border-white/5 space-y-2">
+        {/* Theme Switcher */}
+        <div className={`${isExpanded ? '' : 'flex justify-center'}`}>
+          <ThemeSwitcher isCompact={!isExpanded} />
+        </div>
+
+        {/* Collapse toggle button */}
+        <button
+          onClick={onToggleCollapse}
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-white/5 transition-all group ${
+            !isExpanded ? 'justify-center' : ''
+          }`}
+          title={isCollapsed ? 'Pin sidebar open' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="w-4 h-4 group-hover:text-[var(--accent)] transition-colors" />
+          ) : (
+            <ChevronLeft className="w-4 h-4 group-hover:text-[var(--accent)] transition-colors" />
+          )}
+          {isExpanded && (
+            <span className="text-sm">{isCollapsed ? 'Pin sidebar' : 'Collapse'}</span>
+          )}
+        </button>
       </div>
     </div>
   );
