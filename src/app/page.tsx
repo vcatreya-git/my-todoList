@@ -12,7 +12,7 @@ import {
 
 export default function LandingPage() {
   const handleGetStarted = () => {
-    window.location.href = '/dashboard';
+    window.location.href = '/login';
   };
 
   return (

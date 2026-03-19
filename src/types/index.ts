@@ -85,6 +85,36 @@ export const THEMES: Theme[] = [
   },
 ];
 
+// Raw Supabase row shapes (snake_case, flat)
+export interface DbFolder {
+  id: string;
+  user_id: string;
+  name: string;
+  color: string;
+  position: number;
+  created_at: string;
+}
+
+export interface DbChecklist {
+  id: string;
+  user_id: string;
+  folder_id: string;
+  name: string;
+  position: number;
+  created_at: string;
+}
+
+export interface DbTask {
+  id: string;
+  user_id: string;
+  checklist_id: string;
+  title: string;
+  completed: boolean;
+  due_date: string | null;
+  position: number;
+  created_at: string;
+}
+
 export const FOLDER_COLORS = [
   '#ef4444', // red
   '#f97316', // orange

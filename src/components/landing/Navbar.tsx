@@ -73,7 +73,7 @@ export default function Navbar({
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
-            <a href="#" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
+            <a href="/login" className="text-sm text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
               Sign In
             </a>
             <button
