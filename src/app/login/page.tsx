@@ -73,7 +73,7 @@ export default function LoginPage() {
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-[var(--accent)] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[var(--foreground)] flex items-center justify-center">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
               </svg>
@@ -94,7 +94,7 @@ export default function LoginPage() {
             <button
               key={m}
               onClick={() => { setMode(m); setError(null); setSuccess(null); }}
-              style={mode === m ? { background: 'var(--accent)', color: 'white' } : { color: 'var(--muted)' }}
+              style={mode === m ? { background: 'var(--foreground)', color: 'var(--background)' } : { color: 'var(--muted)' }}
               className="flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200"
             >
               {m === 'signin' ? 'Sign In' : m === 'signup' ? 'Sign Up' : 'Magic Link'}
@@ -152,7 +152,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            style={{ background: 'var(--accent)', opacity: isSubmitting ? 0.7 : 1 }}
+            style={{ background: 'var(--foreground)', opacity: isSubmitting ? 0.7 : 1 }}
             className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-opacity hover:opacity-90 disabled:cursor-not-allowed"
           >
             {isSubmitting

@@ -50,7 +50,7 @@ export default function Navbar({
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <a href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[var(--accent)] rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-[var(--foreground)] rounded-lg flex items-center justify-center">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
@@ -78,7 +78,7 @@ export default function Navbar({
             </a>
             <button
               onClick={onCtaClick}
-              className="px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-sm font-medium rounded-lg transition-colors"
+              className="px-4 py-2 bg-[var(--foreground)] text-[var(--background)] text-sm font-medium rounded-lg hover:opacity-80 transition-opacity"
             >
               {ctaText}
             </button>
@@ -123,7 +123,7 @@ export default function Navbar({
                   setIsMobileMenuOpen(false);
                   onCtaClick?.();
                 }}
-                className="px-4 py-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white font-medium rounded-lg transition-colors"
+                className="px-4 py-2 bg-[var(--foreground)] text-[var(--background)] font-medium rounded-lg hover:opacity-80 transition-opacity"
               >
                 {ctaText}
               </button>

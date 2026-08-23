@@ -141,8 +141,8 @@ export default function FolderItem({ folder, isCollapsed = false }: FolderItemPr
           onClick={handleFolderClick}
           className={`w-full flex justify-center py-2.5 rounded-lg cursor-pointer transition-all ${
             isSelected && !selectedChecklistId
-              ? 'bg-white/5'
-              : 'hover:bg-white/[0.03]'
+              ? 'bg-[var(--card-hover)]'
+              : 'hover:bg-[var(--card-hover)]'
           }`}
           title={folder.name}
         >
@@ -165,8 +165,8 @@ export default function FolderItem({ folder, isCollapsed = false }: FolderItemPr
       <div
         className={`group flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-all ${
           isSelected && !selectedChecklistId
-            ? 'bg-white/5 border border-white/10'
-            : 'hover:bg-white/[0.03] border border-transparent'
+            ? 'bg-[var(--card-hover)] border border-[var(--border)]'
+            : 'hover:bg-[var(--card-hover)] border border-transparent'
         }`}
         onClick={handleFolderClick}
       >
@@ -174,7 +174,7 @@ export default function FolderItem({ folder, isCollapsed = false }: FolderItemPr
         <div
           {...attributes}
           {...listeners}
-          className="cursor-grab active:cursor-grabbing p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-white/5 transition-all"
+          className="cursor-grab active:cursor-grabbing p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-[var(--card-hover)] transition-all"
           onClick={(e) => e.stopPropagation()}
         >
           <GripVertical className="w-3.5 h-3.5 text-[var(--muted)]" />
@@ -184,7 +184,7 @@ export default function FolderItem({ folder, isCollapsed = false }: FolderItemPr
         {folder.checklists.length > 0 && (
           <button
             onClick={handleToggleExpand}
-            className="p-0.5 rounded hover:bg-white/5 transition-colors"
+            className="p-0.5 rounded hover:bg-[var(--card-hover)] transition-colors"
           >
             <ChevronRight
               className={`w-3.5 h-3.5 text-[var(--muted)] transition-transform duration-200 ${
@@ -256,7 +256,7 @@ export default function FolderItem({ folder, isCollapsed = false }: FolderItemPr
         <div className="relative" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => setShowMenu(!showMenu)}
-            className="p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-white/5 transition-all"
+            className="p-1 rounded opacity-0 group-hover:opacity-100 hover:bg-[var(--card-hover)] transition-all"
           >
             <MoreVertical className="w-4 h-4 text-[var(--muted)]" />
           </button>
@@ -265,7 +265,7 @@ export default function FolderItem({ folder, isCollapsed = false }: FolderItemPr
           {showMenu && (
             <div
               ref={menuRef}
-              className="absolute right-0 top-full mt-1 w-44 bg-[var(--card-solid)] border border-[var(--border)] rounded-xl shadow-xl z-20 overflow-hidden"
+              className="absolute right-0 top-full mt-1 w-44 bg-[var(--card-solid)] border border-[var(--border)] rounded-lg shadow-[var(--shadow-md)] z-20 overflow-hidden"
             >
               {showColorPicker ? (
                 <div className="p-3">
@@ -282,14 +282,14 @@ export default function FolderItem({ folder, isCollapsed = false }: FolderItemPr
                       setIsEditing(true);
                       setShowMenu(false);
                     }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground)] hover:bg-white/5 transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors"
                   >
                     <Pencil className="w-4 h-4 text-[var(--muted)]" />
                     Rename
                   </button>
                   <button
                     onClick={() => setShowColorPicker(true)}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground)] hover:bg-white/5 transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors"
                   >
                     <Palette className="w-4 h-4 text-[var(--muted)]" />
                     Change color
@@ -323,8 +323,8 @@ export default function FolderItem({ folder, isCollapsed = false }: FolderItemPr
                 onClick={(e) => handleChecklistClick(e, checklist.id)}
                 className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-md text-left transition-all ${
                   isChecklistSelected
-                    ? 'bg-white/5 text-[var(--foreground)]'
-                    : 'text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-white/[0.02]'
+                    ? 'bg-[var(--card-hover)] text-[var(--foreground)]'
+                    : 'text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card-hover)]'
                 }`}
               >
                 <span className="flex-1 text-sm truncate">{checklist.name}</span>

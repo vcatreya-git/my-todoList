@@ -1,43 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  /* Base colors - Dark theme (default) */
-  --background: #13131a;
-  --background-secondary: #18181f;
-  --foreground: #e4e4e7;
-  --foreground-muted: #a1a1aa;
+  /* Base colors - Light theme (default, Notion style) */
+  --background: #ffffff;
+  --background-secondary: #f7f6f3;
+  --foreground: #37352f;
+  --foreground-muted: #787774;
 
-  /* Card colors with glassmorphism support */
-  --card-bg: rgba(28, 28, 36, 0.8);
-  --card-hover: rgba(37, 37, 46, 0.8);
-  --card-solid: #1c1c24;
+  /* Card colors */
+  --card-bg: #fbfbfa;
+  --card-hover: #f1f1ef;
+  --card-solid: #fbfbfa;
 
   /* Border colors */
-  --border: rgba(45, 45, 56, 0.8);
-  --border-hover: rgba(156, 163, 175, 0.4);
+  --border: #e9e9e7;
+  --border-hover: #c7c7c5;
 
-  /* Accent - Softer Indigo */
-  --gradient-start: #818cf8;
-  --gradient-mid: #a5b4fc;
-  --gradient-end: #818cf8;
-  --accent: #818cf8;
-  --accent-hover: #6366f1;
+  /* Accent - Notion blue */
+  --gradient-start: #2383e2;
+  --gradient-mid: #2383e2;
+  --gradient-end: #2383e2;
+  --accent: #2383e2;
+  --accent-hover: #1a6fc2;
 
-  /* Semantic colors - Softer for dark theme */
-  --danger: #fca5a5;
-  --danger-muted: rgba(252, 165, 165, 0.15);
-  --success: #6ee7b7;
-  --success-muted: rgba(110, 231, 183, 0.15);
-  --warning: #fcd34d;
-  --muted: #9ca3af;
+  /* Semantic colors */
+  --danger: #e03e3e;
+  --danger-muted: rgba(224, 62, 62, 0.08);
+  --success: #0f9b58;
+  --success-muted: rgba(15, 155, 88, 0.1);
+  --warning: #dfab01;
+  --muted: #9b9a97;
 
-  /* Progress track for 0% */
-  --track-empty: rgba(45, 45, 56, 0.6);
+  /* Progress track */
+  --track-empty: #e9e9e7;
 
-  /* Glassmorphism - Dark */
-  --glass-bg: rgba(28, 28, 36, 0.9);
-  --glass-border: rgba(255, 255, 255, 0.05);
-  --glass-shadow: rgba(0, 0, 0, 0.3);
+  /* Shadow */
+  --shadow-sm: 0 1px 3px rgba(15, 15, 15, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 15, 15, 0.08);
 }
 
 @theme inline {
@@ -52,71 +51,47 @@
   --color-success: var(--success);
   --color-muted: var(--muted);
   --font-sans: var(--font-inter);
-  --font-mono: var(--font-mono);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 html {
   scroll-behavior: smooth;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 15px;
   font-weight: 400;
-  letter-spacing: 0.01em;
   line-height: 1.6;
+  letter-spacing: -0.011em;
   transition: background-color 0.3s ease, color 0.3s ease;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
-/* Typography improvements */
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
+/* Typography scale */
+h1 { font-size: 2.25rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
+h2 { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
+h3 { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; }
+h4 { font-size: 1rem;    font-weight: 600; letter-spacing: -0.015em; line-height: 1.3; }
+h5, h6 { font-size: 0.875rem; font-weight: 600; letter-spacing: -0.01em; }
+
+p { line-height: 1.65; }
+
+/* Ensure all form elements inherit the font */
+input, button, select, textarea {
+  font-family: inherit;
+  font-feature-settings: inherit;
 }
 
-.text-sm {
-  font-weight: 450;
-}
-
-.text-xs {
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
-/* Glassmorphism utility classes */
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px var(--glass-shadow);
-}
-
-.glass-subtle {
-  background: rgba(24, 24, 27, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* Gradient progress bar */
-.progress-gradient {
-  background: linear-gradient(90deg, var(--gradient-start) 0%, var(--gradient-mid) 50%, var(--gradient-end) 100%);
-  background-size: 200% 100%;
-  animation: gradient-shift 3s ease infinite;
-}
-
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+/* Sidebar utility */
+.sidebar-bg {
+  background: var(--background-secondary);
+  border-right: 1px solid var(--border);
 }
 
 /* Progress track for empty state */
@@ -187,7 +162,7 @@ section[id] {
 }
 
 .focus-ring:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--border-hover);
   outline-offset: 2px;
 }
 
@@ -199,26 +174,7 @@ section[id] {
   background-clip: text;
 }
 
-/* Subtle glow effect */
-.glow {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
-}
-
-.glow-hover:hover {
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.25);
-}
-
 /* Smooth transitions */
 .transition-smooth {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Card hover lift effect */
-.hover-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.hover-lift:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transition: all 0.15s ease;
 }

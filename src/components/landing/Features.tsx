@@ -65,10 +65,10 @@ export default function Features({
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group p-8 rounded-2xl bg-[var(--card-bg)] border border-[var(--border)] hover:border-[var(--accent)] transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/5"
+              className="group p-8 rounded-xl bg-[var(--card-bg)] border border-[var(--border)] hover:border-[var(--border-hover)] transition-all duration-200"
             >
               {/* Icon */}
-              <div className="w-12 h-12 rounded-xl bg-[var(--accent)]/10 text-[var(--accent)] flex items-center justify-center mb-6 group-hover:bg-[var(--accent)] group-hover:text-white transition-all duration-300">
+              <div className="w-10 h-10 rounded-lg bg-[var(--card-hover)] text-[var(--muted)] flex items-center justify-center mb-5 transition-colors">
                 {feature.icon}
               </div>
 

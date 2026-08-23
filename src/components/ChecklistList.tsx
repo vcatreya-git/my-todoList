@@ -72,8 +72,8 @@ export default function ChecklistList() {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center px-8">
-          <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[var(--gradient-start)]/20 to-[var(--gradient-end)]/20 flex items-center justify-center">
-            <ClipboardList className="w-8 h-8 text-[var(--accent)]" />
+          <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-[var(--card-hover)] flex items-center justify-center">
+            <ClipboardList className="w-8 h-8 text-[var(--muted)]" />
           </div>
           <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2">
             Select a folder
@@ -89,13 +89,13 @@ export default function ChecklistList() {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-[var(--border)] bg-[var(--background)]">
+      <div className="px-4 md:px-6 py-3 md:py-4 border-b border-[var(--border)] bg-[var(--background)]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             {/* Mobile back button */}
             <button
               onClick={() => selectFolder(null)}
-              className="p-1.5 rounded-lg hover:bg-white/5 md:hidden transition-colors"
+              className="p-1.5 rounded-md hover:bg-[var(--card-hover)] md:hidden transition-colors"
             >
               <ChevronLeft className="w-5 h-5 text-[var(--muted)]" />
             </button>
@@ -118,7 +118,7 @@ export default function ChecklistList() {
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Folder Progress - Circular gauge with gradient stroke */}
+            {/* Folder Progress - Circular gauge */}
             {(() => {
               const totalTasks = selectedFolder.checklists.reduce((sum, cl) => sum + cl.tasks.length, 0);
               const completedTasks = selectedFolder.checklists.reduce(
@@ -126,41 +126,34 @@ export default function ChecklistList() {
                 0
               );
               const progressPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-              const circumference = 2 * Math.PI * 18; // radius = 18
+              const circumference = 2 * Math.PI * 18;
               const strokeDashoffset = circumference - (progressPercent / 100) * circumference;
-              const gradientId = 'progress-gradient';
 
               return (
                 <div className="relative w-11 h-11 flex items-center justify-center">
                   <svg className="w-full h-full -rotate-90" viewBox="0 0 44 44">
-                    <defs>
-                      <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="var(--gradient-start)" />
-                        <stop offset="100%" stopColor="var(--gradient-end)" />
-                      </linearGradient>
-                    </defs>
                     <circle
                       cx="22"
                       cy="22"
                       r="18"
                       fill="none"
                       stroke="var(--track-empty)"
-                      strokeWidth="4"
+                      strokeWidth="3"
                     />
                     <circle
                       cx="22"
                       cy="22"
                       r="18"
                       fill="none"
-                      stroke={`url(#${gradientId})`}
-                      strokeWidth="4"
+                      stroke={selectedFolder.color}
+                      strokeWidth="3"
                       strokeLinecap="round"
                       strokeDasharray={circumference}
                       strokeDashoffset={strokeDashoffset}
                       className="transition-all duration-500 ease-out"
                     />
                   </svg>
-                  <span className="absolute text-[10px] font-semibold text-[var(--foreground)]">
+                  <span className="absolute text-[10px] font-medium text-[var(--muted)]">
                     {progressPercent}%
                   </span>
                 </div>
@@ -170,10 +163,10 @@ export default function ChecklistList() {
             {/* Add button */}
             <button
               onClick={() => setIsAdding(true)}
-              className="p-2 rounded-lg bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] hover:opacity-90 transition-all shadow-lg shadow-[var(--gradient-start)]/20"
+              className="p-1.5 rounded-md hover:bg-[var(--card-hover)] transition-colors"
               title="Add new checklist"
             >
-              <Plus className="w-5 h-5 text-white" />
+              <Plus className="w-4 h-4 text-[var(--muted)]" />
             </button>
           </div>
         </div>
@@ -187,13 +180,13 @@ export default function ChecklistList() {
               onChange={(e) => setNewChecklistName(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Enter checklist name..."
-              className="flex-1 px-4 py-2.5 bg-[var(--card-solid)] border border-[var(--border)] rounded-xl text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/20 transition-all"
+              className="flex-1 px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-md text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none focus:border-[var(--border-hover)] transition-all"
               autoFocus
             />
             <button
               onClick={handleAddChecklist}
               disabled={!newChecklistName.trim()}
-              className="px-5 py-2.5 bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white text-sm font-medium rounded-xl hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              className="px-4 py-2 bg-[var(--foreground)] text-[var(--background)] text-sm font-medium rounded-md hover:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
             >
               Create
             </button>
@@ -202,7 +195,7 @@ export default function ChecklistList() {
                 setIsAdding(false);
                 setNewChecklistName('');
               }}
-              className="p-2.5 rounded-xl hover:bg-white/5 transition-colors"
+              className="p-2 rounded-md hover:bg-[var(--card-hover)] transition-colors"
             >
               <X className="w-5 h-5 text-[var(--muted)]" />
             </button>
@@ -211,10 +204,10 @@ export default function ChecklistList() {
       </div>
 
       {/* Checklist grid */}
-      <div className="flex-1 overflow-y-auto px-6 py-4">
+      <div className="flex-1 overflow-y-auto px-3 md:px-6 py-4">
         {displayedChecklists.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[var(--card-hover)] flex items-center justify-center">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-[var(--card-hover)] flex items-center justify-center">
               <ClipboardList className="w-7 h-7 text-[var(--muted)]" />
             </div>
             <p className="text-[var(--foreground)] font-medium mb-1">No checklists yet</p>

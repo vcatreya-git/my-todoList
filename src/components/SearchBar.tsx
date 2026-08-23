@@ -69,12 +69,12 @@ export default function SearchBar() {
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setIsFocused(true)}
           placeholder="Search..."
-          className="w-full pl-11 pr-10 py-2 bg-white/5 border border-transparent rounded-xl text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)]/30 focus:bg-white/[0.07] transition-all"
+          className="w-full pl-11 pr-10 py-2 bg-[var(--card-hover)] border border-transparent rounded-lg text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none focus:border-[var(--border-hover)] transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery('')}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-lg hover:bg-white/10 transition-colors"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-md hover:bg-[var(--card-hover)] transition-colors"
           >
             <X className="w-3.5 h-3.5 text-[var(--muted)]" />
           </button>

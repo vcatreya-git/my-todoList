@@ -81,14 +81,14 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
     <div
       className={`h-full flex flex-col relative transition-all duration-300 ease-in-out ${sidebarWidth} ${
         isOverlay
-          ? 'absolute left-0 top-0 z-50 shadow-2xl bg-[var(--background)] border-r border-[var(--border)]'
-          : 'glass'
+          ? 'absolute left-0 top-0 z-50 shadow-[var(--shadow-md)] bg-[var(--background-secondary)] border-r border-[var(--border)]'
+          : 'sidebar-bg'
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Header */}
-      <div className={`px-3 py-4 border-b border-white/5 transition-all duration-300`}>
+      <div className={`px-3 py-4 border-b border-[var(--border)] transition-all duration-300`}>
         <div className="flex items-center justify-between">
           {isExpanded ? (
             <>
@@ -96,17 +96,17 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
                 <span className="text-xs font-semibold uppercase tracking-wider text-[var(--muted)]">
                   Folders
                 </span>
-                <span className="px-1.5 py-0.5 text-xs font-medium text-[var(--muted)] bg-white/5 rounded">
+                <span className="px-1.5 py-0.5 text-xs font-medium text-[var(--muted)] bg-[var(--card-hover)] rounded">
                   {folders.length}
                 </span>
               </div>
               <div className="flex items-center gap-1">
                 <button
                   onClick={() => setIsAdding(true)}
-                  className="p-1.5 rounded-lg hover:bg-white/5 transition-colors group"
+                  className="p-1.5 rounded-md hover:bg-[var(--card-hover)] transition-colors group"
                   title="Add new folder"
                 >
-                  <Plus className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--accent)] transition-colors" />
+                  <Plus className="w-4 h-4 text-[var(--muted)] group-hover:text-[var(--foreground)] transition-colors" />
                 </button>
               </div>
             </>
@@ -119,7 +119,7 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
 
         {/* Add folder form */}
         {isAdding && isExpanded && (
-          <div className="mt-4 p-3 bg-white/5 rounded-xl border border-white/10">
+          <div className="mt-3 p-3 bg-[var(--background)] rounded-lg border border-[var(--border)] shadow-[var(--shadow-sm)]">
             <div className="flex items-center gap-2 mb-3">
               <input
                 type="text"
@@ -127,7 +127,7 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
                 onChange={(e) => setNewFolderName(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Folder name"
-                className="flex-1 px-3 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/20 transition-all"
+                className="flex-1 px-3 py-1.5 bg-[var(--background)] border border-[var(--border)] rounded-md text-[var(--foreground)] text-sm placeholder-[var(--muted)] focus:outline-none focus:border-[var(--border-hover)] transition-all"
                 autoFocus
               />
               <button
@@ -135,7 +135,7 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
                   setIsAdding(false);
                   setNewFolderName('');
                 }}
-                className="p-2 rounded-lg hover:bg-white/5 transition-colors"
+                className="p-1.5 rounded-md hover:bg-[var(--card-hover)] transition-colors"
               >
                 <X className="w-4 h-4 text-[var(--muted)]" />
               </button>
@@ -149,7 +149,7 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
             <button
               onClick={handleAddFolder}
               disabled={!newFolderName.trim()}
-              className="w-full px-4 py-2 bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] text-white text-sm font-medium rounded-lg hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              className="w-full px-4 py-1.5 bg-[var(--foreground)] text-[var(--background)] text-sm font-medium rounded-md hover:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
             >
               Create Folder
             </button>
@@ -163,7 +163,7 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
           <div className={`text-center py-12 ${isExpanded ? 'px-4' : 'px-1'}`}>
             {isExpanded ? (
               <>
-                <div className="w-12 h-12 mx-auto mb-4 rounded-xl bg-white/5 flex items-center justify-center">
+                <div className="w-12 h-12 mx-auto mb-4 rounded-lg bg-[var(--card-hover)] flex items-center justify-center">
                   <Folder className="w-6 h-6 text-[var(--muted)]" />
                 </div>
                 <p className="text-[var(--foreground)] font-medium mb-1 text-sm">No folders yet</p>
@@ -172,7 +172,7 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
                 </p>
               </>
             ) : (
-              <div className="w-8 h-8 mx-auto rounded-lg bg-white/5 flex items-center justify-center">
+              <div className="w-8 h-8 mx-auto rounded-md bg-[var(--card-hover)] flex items-center justify-center">
                 <Plus className="w-4 h-4 text-[var(--muted)]" />
               </div>
             )}
@@ -202,7 +202,7 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
       </div>
 
       {/* Footer with Theme Switcher and Collapse Toggle */}
-      <div className="px-2 py-3 border-t border-white/5 space-y-2">
+      <div className="px-2 py-3 border-t border-[var(--border)] space-y-1">
         {/* Theme Switcher */}
         <div className={`${isExpanded ? '' : 'flex justify-center'}`}>
           <ThemeSwitcher isCompact={!isExpanded} />
@@ -211,15 +211,15 @@ export default function FolderList({ isCollapsed, onToggleCollapse }: FolderList
         {/* Collapse toggle button */}
         <button
           onClick={onToggleCollapse}
-          className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-white/5 transition-all group ${
+          className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-all group ${
             !isExpanded ? 'justify-center' : ''
           }`}
           title={isCollapsed ? 'Pin sidebar open' : 'Collapse sidebar'}
         >
           {isCollapsed ? (
-            <ChevronRight className="w-4 h-4 group-hover:text-[var(--accent)] transition-colors" />
+            <ChevronRight className="w-4 h-4 transition-colors" />
           ) : (
-            <ChevronLeft className="w-4 h-4 group-hover:text-[var(--accent)] transition-colors" />
+            <ChevronLeft className="w-4 h-4 transition-colors" />
           )}
           {isExpanded && (
             <span className="text-sm">{isCollapsed ? 'Pin sidebar' : 'Collapse'}</span>

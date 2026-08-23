@@ -154,15 +154,15 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
     <div
       ref={setNodeRef}
       style={style}
-      className={`rounded-xl border transition-all duration-200 hover-lift ${
+      className={`rounded-lg border transition-all duration-150 ${
         isSelected
-          ? 'border-[var(--accent)]/30 bg-[var(--card-solid)] shadow-lg shadow-[var(--accent)]/5'
-          : 'border-[var(--border)] bg-[var(--card-solid)] hover:border-white/10'
-      } ${isDragging ? 'z-50 shadow-2xl' : ''}`}
+          ? 'border-[var(--accent)] bg-[var(--card-solid)]'
+          : 'border-[var(--border)] bg-[var(--card-solid)] hover:border-[var(--border-hover)]'
+      } ${isDragging ? 'z-50 shadow-[var(--shadow-md)]' : ''}`}
     >
       {/* Header */}
       <div
-        className="px-5 py-3.5 cursor-pointer"
+        className="px-3 md:px-5 py-3 md:py-3.5 cursor-pointer"
         onClick={handleClick}
       >
         <div className="flex items-center gap-4">
@@ -170,7 +170,7 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
           <div
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 -ml-2 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-white/5 transition-all"
+            className="cursor-grab active:cursor-grabbing p-1 -ml-2 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-[var(--card-hover)] transition-all"
             onClick={(e) => e.stopPropagation()}
           >
             <GripVertical className="w-4 h-4 text-[var(--muted)]" />
@@ -182,7 +182,7 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
               e.stopPropagation();
               setIsExpanded(!isExpanded);
             }}
-            className="p-1 -ml-2 rounded-lg hover:bg-white/5 transition-colors"
+            className="p-1 -ml-2 rounded-lg hover:bg-[var(--card-hover)] transition-colors"
           >
             <ChevronRight
               className={`w-4 h-4 text-[var(--muted)] transition-transform duration-200 ${
@@ -213,7 +213,7 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
 
           {/* Task count badge */}
           <div className="flex items-center gap-3">
-            <span className="text-xs font-medium text-[var(--muted)] bg-white/5 px-2 py-1 rounded-md">
+            <span className="text-xs font-medium text-[var(--muted)] bg-[var(--card-hover)] px-2 py-1 rounded-md">
               {completedCount}/{totalCount}
             </span>
 
@@ -221,7 +221,7 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
             <div className="relative" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="p-1.5 rounded-lg hover:bg-white/5 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-[var(--card-hover)] transition-colors"
               >
                 <MoreVertical className="w-4 h-4 text-[var(--muted)]" />
               </button>
@@ -229,14 +229,14 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
               {showMenu && (
                 <div
                   ref={menuRef}
-                  className="absolute right-0 top-full mt-1 w-40 bg-[var(--card-solid)] border border-[var(--border)] rounded-xl shadow-xl z-10 overflow-hidden"
+                  className="absolute right-0 top-full mt-1 w-40 bg-[var(--card-solid)] border border-[var(--border)] rounded-lg shadow-[var(--shadow-md)] z-10 overflow-hidden"
                 >
                   <button
                     onClick={() => {
                       setIsEditing(true);
                       setShowMenu(false);
                     }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground)] hover:bg-white/5 transition-colors"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors"
                   >
                     <Pencil className="w-4 h-4 text-[var(--muted)]" />
                     Rename
@@ -271,7 +271,7 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
 
       {/* Expanded tasks section */}
       {isExpanded && (
-        <div className="px-5 pb-4 border-t border-[var(--border)]">
+        <div className="px-3 md:px-5 pb-3 md:pb-4 border-t border-[var(--border)]">
           <div className="pt-4 space-y-1">
             {/* Add task button/form */}
             {isAddingTask ? (
@@ -286,23 +286,16 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
                   autoFocus
                 />
                 <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--border)]">
-                  <button
-                    onClick={() => {
-                      const input = document.getElementById('task-date-input') as HTMLInputElement;
-                      input?.showPicker?.();
-                    }}
-                    className="flex items-center gap-2 px-3 py-1.5 text-xs text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-white/5 rounded-lg transition-colors"
-                  >
+                  <label className="flex items-center gap-2 px-3 py-1.5 text-xs text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card-hover)] rounded-lg transition-colors cursor-pointer">
                     <Calendar className="w-3.5 h-3.5" />
                     {newTaskDueDate || 'Add date'}
-                  </button>
-                  <input
-                    id="task-date-input"
-                    type="date"
-                    value={newTaskDueDate}
-                    onChange={(e) => setNewTaskDueDate(e.target.value)}
-                    className="sr-only"
-                  />
+                    <input
+                      type="date"
+                      value={newTaskDueDate}
+                      onChange={(e) => setNewTaskDueDate(e.target.value)}
+                      className="sr-only"
+                    />
+                  </label>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => {
@@ -317,7 +310,7 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
                     <button
                       onClick={handleAddTask}
                       disabled={!newTaskTitle.trim()}
-                      className="px-4 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-end)] rounded-lg hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                      className="px-4 py-1.5 text-xs font-medium text-[var(--background)] bg-[var(--foreground)] rounded-md hover:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
                     >
                       Add Task
                     </button>
@@ -327,7 +320,7 @@ export default function ChecklistItem({ checklist, folderId, folderColor }: Chec
             ) : (
               <button
                 onClick={() => setIsAddingTask(true)}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-white/5 rounded-xl transition-all mb-2"
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--card-hover)] rounded-xl transition-all mb-2"
               >
                 <Plus className="w-4 h-4" />
                 Add task

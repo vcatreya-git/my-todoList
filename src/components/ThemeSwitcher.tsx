@@ -27,7 +27,7 @@ export default function ThemeSwitcher({ isCompact = false }: ThemeSwitcherProps)
     <div ref={menuRef} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 rounded-xl hover:bg-white/5 transition-colors ${
+        className={`flex items-center gap-2 rounded-md hover:bg-[var(--card-hover)] transition-colors ${
           isCompact ? 'p-2 justify-center w-full' : 'px-3 py-2'
         }`}
         title="Change theme"
@@ -46,7 +46,7 @@ export default function ThemeSwitcher({ isCompact = false }: ThemeSwitcherProps)
       </button>
 
       {isOpen && (
-        <div className={`absolute ${isCompact ? 'left-full ml-2 bottom-0' : 'left-0 bottom-full mb-2'} w-52 bg-[var(--card-solid)] border border-[var(--border)] rounded-xl shadow-xl z-50 overflow-hidden`}>
+        <div className={`absolute ${isCompact ? 'left-full ml-2 bottom-0' : 'left-0 bottom-full mb-2'} w-52 bg-[var(--card-solid)] border border-[var(--border)] rounded-lg shadow-[var(--shadow-md)] z-50 overflow-hidden`}>
           <div className="p-2">
             <p className="px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-[var(--muted)]">
               Select Theme
@@ -61,20 +61,20 @@ export default function ThemeSwitcher({ isCompact = false }: ThemeSwitcherProps)
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left transition-all ${
                   theme.id === t.id
                     ? 'bg-[var(--accent)]/10 text-[var(--accent)]'
-                    : 'hover:bg-white/5 text-[var(--foreground)]'
+                    : 'hover:bg-[var(--card-hover)] text-[var(--foreground)]'
                 }`}
               >
                 <div className="flex gap-0.5">
                   <div
-                    className="w-3 h-3 rounded-full ring-1 ring-white/10"
+                    className="w-3 h-3 rounded-full ring-1 ring-[var(--border)]"
                     style={{ backgroundColor: t.colors.background }}
                   />
                   <div
-                    className="w-3 h-3 rounded-full ring-1 ring-white/10 -ml-1"
+                    className="w-3 h-3 rounded-full ring-1 ring-[var(--border)] -ml-1"
                     style={{ backgroundColor: t.colors.accent }}
                   />
                   <div
-                    className="w-3 h-3 rounded-full ring-1 ring-white/10 -ml-1"
+                    className="w-3 h-3 rounded-full ring-1 ring-[var(--border)] -ml-1"
                     style={{ backgroundColor: t.colors.cardBg }}
                   />
                 </div>
